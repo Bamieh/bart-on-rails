@@ -9,13 +9,13 @@ export default (store) => ({
     require.ensure([], (require) => {
       /*  Webpack - use require callback to define
           dependencies for bundling   */
-      const Counter = require('./containers/CounterContainer').default
+      const Container = require('./containers/SearchContainer').default
       const reducer = require('./modules/counter').default
 
-      injectReducer(store, { key: 'recent', reducer })
+      injectReducer(store, { key: 'bart', reducer })
 
       /*  Return getComponent   */
-      cb(null, Counter)
+      cb(null, Container)
 
     /* Webpack named bundle   */
     }, 'search')

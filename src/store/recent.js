@@ -1,7 +1,7 @@
 // ------------------------------------
 // Constants
 // ------------------------------------
-export const ADD_RECENT = 'ADD_RECENT'
+export const PUSH_TO_RECENT = 'PUSH_TO_RECENT'
 
 
 // Helper functions
@@ -21,7 +21,7 @@ function buildQueryText({arrivalStation, destinationStation, formatedStamp}) {
 
 export function addRecent ({queryText, queryURL}) {
   return {
-    type    : ADD_RECENT,
+    type    : PUSH_TO_RECENT,
     payload : {queryText, queryURL},
   }
 }
@@ -36,23 +36,19 @@ export const pushRecent = (data) => {
         queryURL,
       })
     );
-    // window.location.replace(`/Schedule/${queryURL}`)
   }
 }
 
 
-export const actions = {
-  pushRecent,
-}
 
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [ADD_RECENT] : (state, action) => {
-    const newState = Object.assign({}, state);
-    newState.recent = state.recent.slice(0);
-    newState.recent.unshift(action.payload);
+  [PUSH_TO_RECENT] : (state, action) => {
+    console.log('state', state);
+    const newState = state.slice(0);
+    newState.unshift(action.payload);
     console.log('new state set')
     return newState;
   }
@@ -61,9 +57,9 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const initialState = {recent: []};
+const initialState = [];
 
-export default function counterReducer (state = initialState, action) {
+export default function recentReducer (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type]
 
   return handler ? handler(state, action) : state

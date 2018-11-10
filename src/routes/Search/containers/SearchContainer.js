@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { BartReq } from '../modules/counter'
+import { pushRecent } from '../modules/counter'
 
 import { Link } from 'react-router'
 
@@ -42,22 +42,24 @@ class SearchContainer extends React.Component {
     this.setState({destinationStation})
   }
   submit() {
-    const {BartReq} = this.props;
+    const {pushRecent} = this.props;
     const {arrivalStation, destinationStation, date} = this.state;
     const momentDate = date && moment(date, 'YYYY-MM-DDTHH:mm');
     if(arrivalStation && destinationStation && momentDate && momentDate.isValid()) {
-      BartReq({
+      console.log('push recent')
+      pushRecent({
         arrivalStation,
         destinationStation,
-        date: momentDate.format('MM/DD/YYYY'),
+        stamp: momentDate.format('X'),
+        formatedStamp: momentDate.format('MM/DD/YYYY h:mma'),
         time: momentDate.format('h:mma'),
       });
     }
   }
   render() {
     const {arrivalStation, destinationStation, date} = this.state;
-    const {recent} = this.props;
-    console.log('render recent::', recent)
+    const {bart} = this.props;
+    const {recent} = bart;
     return (
       <div className="row">
         <div className="col-xs-9">
@@ -90,14 +92,18 @@ class SearchContainer extends React.Component {
           </div>
         </div>
         <div className="col-xs-3">
-          {recent.map((item, key) => {
-            const {queryText, query, schedule} = item;
+          <ul>
+          {recent && recent.map((item, key) => {
+            const {queryText, queryURL} = item;
             return (
-              <Link key={key} to={`/search?${query}`} activeClassName='route--active'>
+              <li key={key}>
+              <Link to={`/schedule/${queryURL}`} activeClassName='route--active'>
                 {queryText}
               </Link>
+              </li>
             )
           })}
+          </ul>
         </div>
       </div>
     )
@@ -105,16 +111,17 @@ class SearchContainer extends React.Component {
 }
 
 SearchContainer.propTypes = {
-  BartReq     : React.PropTypes.func.isRequired,
+  pushRecent     : React.PropTypes.func.isRequired,
 }
 
 const mapDispatchToProps = {
-  BartReq,
+  pushRecent,
 }
 
 const mapStateToProps = (state) => {
+  console.log('state!', state)
   return ({
-    recent: state.recent,
+    bart: state.bart,
   })
 }
 

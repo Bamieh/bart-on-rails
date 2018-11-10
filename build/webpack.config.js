@@ -4,6 +4,10 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const config = require('../config')
 const debug = require('debug')('app:webpack:config')
+const path = require('path')
+
+const ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin')
+
 
 const paths = config.utils_paths
 const __DEV__ = config.globals.__DEV__
@@ -56,6 +60,19 @@ webpackConfig.plugins = [
     minify   : {
       collapseWhitespace : true
     }
+  }),
+  new ServiceWorkerWebpackPlugin({
+    entry: paths.client('sw.js'),
+    // relativePaths: true,
+    // publicPath: '/',
+    // entry: path.join(__dirname, 'src/sw.js'),
+    excludes: [
+      // '**/.*',
+      '**/*.map',
+
+      // '*.html',
+      // '__webpack_hmr',
+    ],
   })
 ]
 
